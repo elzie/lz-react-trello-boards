@@ -1,6 +1,8 @@
 import React from 'react';
-import List from './List';
+import PropTypes from 'prop-types';
 import data from '../sampleData';
+
+import List from './List';
 
 class Board extends React.Component {
     state = {
@@ -40,5 +42,9 @@ class Board extends React.Component {
         )
     }
 }
+
+// Board.propTypes = {
+//     board: PropTypes.object.isRequired
+// }
 
 export default Board;

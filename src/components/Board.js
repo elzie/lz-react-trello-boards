@@ -14,30 +14,57 @@ class Board extends React.Component {
             currentLists: data.lists
         })
     }
-    createNewList = () => {
+
+    addBoardInput = React.createRef();
+
+    createNewList = (e) => {
+        e.preventDefault();
+        // console.log(this.addBoardInput);
         const list = {
             id: Math.random(),
-            title: 'My awesome List',
+            title: this.addBoardInput.current.value,
             board: 300,
-            createdAt: new Date()
-        }
-        this.setState({
-            currentLists: [
-                ...this.state.currentLists,
-                list
+            createdAt: new Date(),
+            cards: [
+                {
+                    id: 1,
+                    text: 'card 1'
+                },
+                {
+                    id: 2,
+                    text: 'card 2'
+                }
             ]
-        })
+        }
+        if (list.title) {
+            this.setState({
+                currentLists: [
+                    ...this.state.currentLists,
+                    list
+                ]
+            })
+        }
+        this.addBoardInput.current.value = '';
     }
     render() {
         return (
-            <div className="lists-wrapper">
-                <button onClick={this.createNewList}>New List</button>
-                {Object.keys(this.state.currentLists).map((key) => (
-                    <List
-                        key={this.state.currentLists[key].id}
-                        list={this.state.currentLists[key]}
-                    />
-                ))}
+            <div>
+                <div className="lists-wrapper">
+                    {Object.keys(this.state.currentLists).map((key) => (
+                        <List
+                            key={this.state.currentLists[key].id}
+                            list={this.state.currentLists[key]}
+                        />
+                    ))}
+                </div>
+                <form onSubmit={this.createNewList}
+                    className="new-list-wrapper">
+                    <input
+                        type="text"
+                        ref={this.addBoardInput}
+                        name="name"
+                        placeholder="+ New list" />
+                </form>
             </div>
         )
     }

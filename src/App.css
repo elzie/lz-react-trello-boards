@@ -145,7 +145,7 @@ header a {
 
 /* add as onmouseover event in js */
 .lists-wrapper:hover {
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .list {

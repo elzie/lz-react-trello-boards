@@ -48,7 +48,7 @@ const lists = [
         ],
     },
     {
-        id: 200,
+        id: 300,
         title: 'Travel ideas 2',
         board: 2000,
         cards: [

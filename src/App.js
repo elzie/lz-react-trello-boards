@@ -1,34 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import data from './sampleData';
 
 // Components
 import Board from './components/Board';
+import Home from './components/pages/Home';
 
 class App extends React.Component {
   state = {
-    boards: data.boards
+    boards: []
   }
   componentDidMount() {
     this.setState({ boards: data.boards });
 
   }
-
+  createNewBoard = board => {
+    this.setState({
+      boards: [
+        ...this.state.boards,
+        board
+      ]
+    })
+  }
   render() {
     return (
       <div>
-        {
-          this.state.boards.map(board => (
-            <div key={board.id}>
-              <span>
-                {board.id}
-              </span>
-              <h3>{board.title}</h3>
-              <p>{board.background}</p>
-            </div>
-          ))
-        }
+        <Home
+          boards={this.state.boards}
+          createNewBoard={this.createNewBoard} />
+        <Board />
       </div>
     );
   }

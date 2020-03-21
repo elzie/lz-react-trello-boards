@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import data from '../sampleData';
 
 import List from './List';
@@ -71,7 +71,7 @@ class Board extends React.Component {
 }
 
 // Board.propTypes = {
-//     board: PropTypes.object.isRequired
+//     boards: PropTypes.array.isRequired
 // }
 
 export default Board;

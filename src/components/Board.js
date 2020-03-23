@@ -1,6 +1,7 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 import data from '../sampleData';
+import { listsRef } from '../firebase';
 
 import List from './List';
 
@@ -17,34 +18,24 @@ class Board extends React.Component {
 
     addBoardInput = React.createRef();
 
-    createNewList = (e) => {
-        e.preventDefault();
-        // console.log(this.addBoardInput);
-        const list = {
-            id: Math.random(),
-            title: this.addBoardInput.current.value,
-            board: 300,
-            createdAt: new Date(),
-            cards: [
-                {
-                    id: 1,
-                    text: 'card 1'
-                },
-                {
-                    id: 2,
-                    text: 'card 2'
-                }
-            ]
+    createNewList = async (e) => {
+        try {
+            e.preventDefault();
+            // console.log(this.addBoardInput);
+            const list = {
+                title: this.addBoardInput.current.value,
+                board: this.props.match.params.boardId,
+                createdAt: new Date(),
+
+            }
+            if (list.title && list.board) {
+                await listsRef.add({ list })
+            }
+            this.addBoardInput.current.value = '';
+        } catch (error) {
+            console.error('Error creating new List: ', error);
+
         }
-        if (list.title) {
-            this.setState({
-                currentLists: [
-                    ...this.state.currentLists,
-                    list
-                ]
-            })
-        }
-        this.addBoardInput.current.value = '';
     }
     render() {
         return (

@@ -6,7 +6,7 @@ class CreateBoardForm extends React.Component {
         title: '',
         background: '#80ccff'
     }
-
+    newBoardRef = React.createRef();
     handleSubmit = (e) => {
         e.preventDefault();
         // console.log('form: ', this.state);
@@ -18,6 +18,7 @@ class CreateBoardForm extends React.Component {
         }
         if (board.title && board.background) {
             this.props.createNewBoard(board);
+            this.newBoardRef.current.value = '';
         }
     }
     render() {
@@ -33,6 +34,7 @@ class CreateBoardForm extends React.Component {
                         name="name"
                         placeholder="Board name"
                         onChange={(e) => this.setState({ title: e.target.value })}
+                        ref={this.newBoardRef}
                     />
                     <select name="background"
                         onChange={(e) => this.setState({ background: e.target.value })}>

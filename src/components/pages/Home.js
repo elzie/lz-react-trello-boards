@@ -5,7 +5,10 @@ import BoardPreview from '../BoardPreview';
 import CreateBoardForm from '../CreateBoardForm';
 
 class Home extends React.Component {
-
+    componentDidMount() {
+        // this.setState({ boards: data.boards });
+        this.props.getBoards();
+    }
     render() {
         return (
             <div>
@@ -30,6 +33,7 @@ class Home extends React.Component {
 }
 
 Home.propTypes = {
+    getBoards: PropTypes.func.isRequired,
     boards: PropTypes.array.isRequired,
     createNewBoard: PropTypes.func.isRequired
 }

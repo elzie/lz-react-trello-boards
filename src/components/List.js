@@ -8,7 +8,7 @@ class List extends React.Component {
         currentCards: []
     }
 
-    nameInput = React.createRef()
+    nameInput = React.createRef();
 
     createNewCard = async (e) => {
         try {

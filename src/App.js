@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import data from './sampleData';
+// import data from './sampleData';
 import { boardsRef } from './firebase';
 
 import './App.css';
@@ -15,9 +15,27 @@ class App extends React.Component {
   state = {
     boards: []
   }
-  componentDidMount() {
-    this.setState({ boards: data.boards });
 
+  getBoards = async userId => {
+    try {
+      this.setState({ boards: [] })
+      // [] ensures that any previous boards in state will be removed before making calls to firebase.
+      const boards = await boardsRef.get();
+      //.get() gets data once, but doesnt listen for changes.
+
+      boards.forEach(board => {
+        // console.log(board.data().board);
+        const data = board.data().board;
+        const boardObj = {
+          id: board.id,
+          ...data
+        }
+        this.setState({ boards: [...this.state.boards, boardObj] })
+      });
+
+    } catch (error) {
+      console.log('Error getting Boards. ', error)
+    }
   }
   createNewBoard = async board => {
     try {
@@ -49,6 +67,7 @@ class App extends React.Component {
               path="/:userId/boards"
               render={(props) => (
                 <Home
+                  getBoards={this.getBoards}
                   {...props}
                   boards={this.state.boards}
                   createNewBoard={this.createNewBoard} />

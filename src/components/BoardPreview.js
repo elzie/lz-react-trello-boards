@@ -8,11 +8,7 @@ class BoardPreview extends React.Component {
         const boardId = this.props.board.id;
         console.log(boardId);
         this.props.history.push({
-            pathname: `/board/${boardId}`,
-            state: {
-                title: this.props.board.title,
-                background: this.props.board.background
-            }
+            pathname: `/board/${boardId}`
         })
     }
 

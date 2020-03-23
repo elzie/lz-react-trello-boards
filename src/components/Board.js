@@ -1,21 +1,33 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 import data from '../sampleData';
-import { listsRef } from '../firebase';
+import { boardsRef, listsRef } from '../firebase';
 
 import List from './List';
 
 class Board extends React.Component {
     state = {
+        currentBoard: {},
         currentLists: []
     }
 
     componentDidMount() {
+        this.getBoard(this.props.match.params.boardId);
+        // grab the boardId which is stored in the URL parameters
+        // therefor access the router params and use the current ID
+
         this.setState({
             currentLists: data.lists
         })
     }
-
+    getBoard = async boardId => {
+        try {
+            const board = await boardsRef.doc(boardId).get();
+            this.setState({ currentBoard: board.data().board });
+        } catch (error) {
+            console.log('Error getting boards.', error)
+        }
+    }
     addBoardInput = React.createRef();
 
     createNewList = async (e) => {
@@ -42,12 +54,12 @@ class Board extends React.Component {
             <div
                 className="board-wrapper"
                 style={{
-                    backgroundColor: this.props.location.state.background
+                    backgroundColor: this.state.currentBoard.background
                 }}
             >
                 <div className="lists-wrapper">
                     <div className="board-header">
-                        <h3>{this.props.location.state.title}</h3>
+                        <h3>{this.state.currentBoard.title}</h3>
                         <button>Delete Board</button>
                     </div>
                     {Object.keys(this.state.currentLists).map((key) => (

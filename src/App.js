@@ -1,8 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import './App.css';
 import data from './sampleData';
+
+import './App.css';
 
 // Components
 import Board from './components/Board';

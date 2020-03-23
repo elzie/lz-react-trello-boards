@@ -15,10 +15,10 @@ firebase.initializeApp(config);
 
 const db = firebase.firestore();
 
-const boardRef = db.collection('boards');
+const boardsRef = db.collection('boards');
 
 const listsRef = db.collection('lists');
 
 const cardsRef = db.collection('cards');
 
-export { boardRef, listsRef, cardsRef } 
+export { boardsRef, listsRef, cardsRef } 

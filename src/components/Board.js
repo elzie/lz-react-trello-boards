@@ -1,6 +1,6 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
-import data from '../sampleData';
+// import data from '../sampleData';
 import { boardsRef, listsRef } from '../firebase';
 
 import List from './List';
@@ -15,11 +15,29 @@ class Board extends React.Component {
         this.getBoard(this.props.match.params.boardId);
         // grab the boardId which is stored in the URL parameters
         // therefor access the router params and use the current ID
-
-        this.setState({
-            currentLists: data.lists
-        })
+        this.getLists(this.props.match.params.boardId);
     }
+
+    getLists = async boardId => {
+        try {
+            const lists = await listsRef
+                .where('list.board', '==', boardId)
+                .orderBy('list.createdAt')
+                .get();
+            lists.forEach(list => {
+                const data = list.data().list;
+                const listObj = {
+                    id: list.id,
+                    ...data
+                }
+                this.setState({ currentLists: [...this.state.currentLists, listObj] })
+            });
+
+        } catch (error) {
+            console.log('Error fetching Lists: ', error);
+        }
+    }
+
     getBoard = async boardId => {
         try {
             const board = await boardsRef.doc(boardId).get();

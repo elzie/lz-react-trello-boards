@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { cardsRef } from '../firebase';
+import { listsRef, cardsRef } from '../firebase';
 import Card from './Card';
 
 class List extends React.Component {
@@ -53,12 +53,16 @@ class List extends React.Component {
 
         }
     }
-
+    deleteList = () => {
+        const listId = this.props.list.id;
+        this.props.deleteList(listId);
+    }
     render() {
         return (
             <div className="list">
                 <div className="list-header">
                     <p>{this.props.list.title}</p>
+                    <span onClick={this.deleteList}>&times;</span>
                 </div>
                 {Object.keys(this.state.currentCards).map(key => (
                     <Card
@@ -76,7 +80,8 @@ class List extends React.Component {
 }
 
 List.propTypes = {
-    list: PropTypes.object.isRequired
+    list: PropTypes.object.isRequired,
+    deleteList: PropTypes.func.isRequired
 }
 
 export default List;

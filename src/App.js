@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 // import data from './sampleData';
-import { boardsRef } from './firebase';
+import { boardsRef, listsRef, cardsRef } from './firebase';
 
 import './App.css';
 
@@ -57,6 +57,51 @@ class App extends React.Component {
       console.error('Error creating new Board: ', error);
     }
   }
+
+  deleteList = async (listId) => {
+    try {
+      const cards = await cardsRef
+        .where('card.listId', '==', listId)
+        .get();
+      if (cards.docs.length !== 0) {
+        cards.forEach(card => {
+          card.ref.delete();
+        });
+      }
+      const list = await listsRef.doc(listId);
+      list.delete();
+    } catch (error) {
+      console.log('Error deleting list: ', error);
+    }
+  }
+
+  deleteBoard = async boardId => {
+    try {
+      const lists = await listsRef
+        .where('list.board', '==', boardId)
+        .get();
+
+      if (lists.docs.length !== 0) {
+        lists.forEach(list => {
+          this.deleteList(list.ref.id);
+        })
+      }
+
+
+      // alert(boardId);
+      const board = await boardsRef.doc(boardId);
+      this.setState({
+        boards: [
+          ...this.state.boards.filter(board => {
+            return board.id !== boardId
+          })
+        ]
+      });
+      board.delete();
+    } catch (error) {
+      console.error('Error deleting board: ', error);
+    }
+  }
   render() {
     return (
       <div>
@@ -78,6 +123,8 @@ class App extends React.Component {
               render={props => (
                 <Board
                   {...props}
+                  deleteBoard={this.deleteBoard}
+                  deleteList={this.deleteList}
                 />
               )} />
             <Route component={PageNotFound} />

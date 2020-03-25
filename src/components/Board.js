@@ -1,5 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 // import data from '../sampleData';
 import { boardsRef, listsRef } from '../firebase';
 
@@ -67,6 +67,10 @@ class Board extends React.Component {
 
         }
     }
+    deleteBoard = async () => {
+        const boardId = this.props.match.params.boardId;
+        this.props.deleteBoard(boardId);
+    }
     render() {
         return (
             <div
@@ -78,12 +82,13 @@ class Board extends React.Component {
                 <div className="lists-wrapper">
                     <div className="board-header">
                         <h3>{this.state.currentBoard.title}</h3>
-                        <button>Delete Board</button>
+                        <button onClick={this.deleteBoard}>Delete Board</button>
                     </div>
                     {Object.keys(this.state.currentLists).map((key) => (
                         <List
                             key={this.state.currentLists[key].id}
                             list={this.state.currentLists[key]}
+                            deleteList={this.props.deleteList}
                         />
                     ))}
                 </div>
@@ -100,8 +105,9 @@ class Board extends React.Component {
     }
 }
 
-// Board.propTypes = {
-//     boards: PropTypes.array.isRequired
-// }
+Board.propTypes = {
+    deleteBoard: PropTypes.func.isRequired,
+    deleteList: PropTypes.func.isRequired
+}
 
 export default Board;

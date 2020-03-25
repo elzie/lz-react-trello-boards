@@ -102,6 +102,15 @@ class App extends React.Component {
       console.error('Error deleting board: ', error);
     }
   }
+
+  updateBoard = async (boardId, newTitle) => {
+    try {
+      const board = await boardsRef.doc(boardId);
+      board.update({ 'board.title': newTitle });
+    } catch (error) {
+      console.error('Error updating board title:', error);
+    }
+  }
   render() {
     return (
       <div>
@@ -125,6 +134,7 @@ class App extends React.Component {
                   {...props}
                   deleteBoard={this.deleteBoard}
                   deleteList={this.deleteList}
+                  updateBoard={this.updateBoard}
                 />
               )} />
             <Route component={PageNotFound} />

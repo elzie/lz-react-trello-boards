@@ -57,11 +57,27 @@ class List extends React.Component {
         const listId = this.props.list.id;
         this.props.deleteList(listId);
     }
+    updateList = async e => {
+        try {
+            const listId = this.props.list.id;
+            const newTitle = e.currentTarget.value;
+            const list = await listsRef.doc(listId);
+            list.update({ 'list.title': newTitle });
+        } catch (error) {
+            console.error('Error updating list title: ', error)
+        }
+    }
     render() {
         return (
             <div className="list">
                 <div className="list-header">
-                    <p>{this.props.list.title}</p>
+                    {/*<p>{this.props.list.title}</p>*/}
+                    <input
+                        type="text"
+                        name="listTitle"
+                        onChange={this.updateList}
+                        defaultValue={this.props.list.title}
+                    />
                     <span onClick={this.deleteList}>&times;</span>
                 </div>
                 {Object.keys(this.state.currentCards).map(key => (

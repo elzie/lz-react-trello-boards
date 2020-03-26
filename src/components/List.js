@@ -13,20 +13,55 @@ class List extends React.Component {
 
     fetchCards = async listId => {
         try {
-            const cards = await cardsRef
+            await cardsRef
                 .where('card.listId', '==', listId)
                 .orderBy('card.createdAt')
-                .get();
-
-            cards.forEach(card => {
-                const data = card.data().card;
-                const cardObj = {
-                    id: card.id,
-                    ...data
-                }
-                // console.log(cardObj);
-                this.setState({ currentCards: [...this.state.currentCards, cardObj] });
-            });
+                .onSnapshot(snapshot => {
+                    snapshot.docChanges()
+                        .forEach(change => {
+                            const doc = change.doc;
+                            const card = {
+                                id: doc.id,
+                                text: doc.data().card.text,
+                                labels: doc.data().card.labels
+                            }
+                            if (change.type === 'added') {
+                                // Merge in the current cards
+                                this.setState({ currentCards: [...this.state.currentCards, card] });
+                            }
+                            if (change.type === 'removed') {
+                                // filter out by id
+                                this.setState({
+                                    currentCards: [
+                                        ...this.state.currentCards.filter(card => {
+                                            return card.id !== change.doc.id
+                                        })
+                                    ]
+                                })
+                            }
+                            if (change.type === 'modified') {
+                                const index = this.state.currentCards.findIndex(item => {
+                                    // return the card where the Id is equal to the one being changed
+                                    return item.id === change.doc.id
+                                });
+                                const cards = [
+                                    ...this.state.currentCards
+                                ]
+                                cards[index] = card;
+                                this.setState({ currentCards: cards });
+                            }
+                        });
+                });
+            //     .get();
+            // cards.forEach(card => {
+            //     const data = card.data().card;
+            //     const cardObj = {
+            //         id: card.id,
+            //         ...data
+            //     }
+            //     // console.log(cardObj);
+            //     this.setState({ currentCards: [...this.state.currentCards, cardObj] });
+            // });
         } catch (error) {
             console.error('Error fetching cards: ', error);
         }

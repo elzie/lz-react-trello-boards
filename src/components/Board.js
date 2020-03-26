@@ -27,14 +27,27 @@ class Board extends React.Component {
                     snapshot.docChanges()
                         .forEach(change => {
                             // console.log(change.doc.data());
-                            const doc = change.doc;
-                            const list = {
-                                id: doc.id,
-                                title: doc.data().list.title
+                            if (change.type === 'added') {
+                                const doc = change.doc;
+                                const list = {
+                                    id: doc.id,
+                                    title: doc.data().list.title
+                                }
+                                this.setState({
+                                    currentLists: [...this.state.currentLists, list]
+                                });
                             }
-                            this.setState({
-                                currentLists: [...this.state.currentLists, list]
-                            });
+                            if (change.type === 'removed') {
+                                this.setState({
+                                    currentLists: [
+                                        ...this.state.currentLists.filter(list => {
+                                            // Grab all lists from state
+                                            return list.id !== change.doc.id
+                                            // return only lists that doesnt match the list being removed
+                                        })
+                                    ]
+                                })
+                            }
                         });
                 });
             //     .get();

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { cardsRef } from '../firebase';
+import TextareaAutosize from 'react-autosize-textarea';
 
 import EditCardModal from './EditCardModal';
 
@@ -34,7 +35,13 @@ class Card extends React.Component {
                         })}
                     </div>
                     <div className="card-body">
-                        <p onClick={this.toggleModal}>{this.props.data.text}</p>
+                        {/*<p >{this.props.data.text}</p>*/}
+                        <TextareaAutosize
+                            onClick={this.toggleModal}
+                            readOnly
+                            value={this.props.data.text}
+                        >
+                        </TextareaAutosize>
                         <span onClick={this.deleteCard}>&times;</span>
                     </div>
                 </div>

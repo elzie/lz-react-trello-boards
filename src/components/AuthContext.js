@@ -6,9 +6,24 @@ const AuthContext = React.createContext()
 //ProviderComponent will provide data to other components
 class AuthProvider extends React.Component {
     state = {
-        user: {
-            name: 'Djan K. Blom'
-        }
+        user: {}
+    }
+
+    UNSAFE_componentWillMount() {
+        firebaseAuth.onAuthStateChanged((user) => {
+            if (user) {
+                this.setState({
+                    user: {
+                        id: user.id,
+                        email: user.email,
+                    }
+                })
+            } else {
+                this.setState({
+                    user: {}
+                })
+            }
+        })
     }
 
     signUp = async (email, password, e) => {

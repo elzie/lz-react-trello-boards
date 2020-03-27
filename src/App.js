@@ -9,6 +9,7 @@ import './App.css';
 
 // Components
 import UserForm from './components/UserForm';
+import Header from './components/Header';
 import Board from './components/Board';
 import Home from './components/pages/Home';
 import PageNotFound from './components/pages/PageNotFound';
@@ -118,6 +119,7 @@ class App extends React.Component {
       <div>
         <BrowserRouter>
           <AuthProvider>
+            <Header />
             <Switch>
               <Route
                 exact

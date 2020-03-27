@@ -51,6 +51,7 @@ class Board extends React.Component {
                             }
                         });
                 });
+            console.log(lists);
             //     .get();
             // lists.forEach(list => {
             //     const data = list.data().list;

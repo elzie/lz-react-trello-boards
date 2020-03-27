@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 // import data from './sampleData';
 import { boardsRef, listsRef, cardsRef } from './firebase';
-import { AuthProvider } from './components/AuthContext';
+import AuthProvider from './components/AuthContext';
 
 import './App.css';
 

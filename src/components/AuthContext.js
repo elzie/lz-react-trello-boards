@@ -1,12 +1,14 @@
 import React from 'react';
 import { firebaseAuth } from '../firebase';
+import { withRouter } from 'react-router-dom';
 
 const AuthContext = React.createContext()
 
 //ProviderComponent will provide data to other components
 class AuthProvider extends React.Component {
     state = {
-        user: {}
+        user: {},
+        authMessage: ''
     }
 
     UNSAFE_componentWillMount() {
@@ -30,8 +32,12 @@ class AuthProvider extends React.Component {
         try {
             e.preventDefault();
             await firebaseAuth.createUserWithEmailAndPassword(email, password);
+            // Redirect on Login
+            this.props.history.push(`/${this.state.user.id}/boards`);
         } catch (error) {
-            // will add error handling soon
+            this.setState({
+                authMessage: error.message
+            })
         }
     }
 
@@ -40,8 +46,12 @@ class AuthProvider extends React.Component {
             e.preventDefault();
             await firebaseAuth.signInWithEmailAndPassword(email, password);
             console.log('Logged in!');
+            // Redirect on Login
+            this.props.history.push(`/${this.state.user.id}/boards`);
         } catch (error) {
-            // will add error handling soon
+            this.setState({
+                authMessage: error.message
+            })
         }
     }
 
@@ -51,9 +61,12 @@ class AuthProvider extends React.Component {
             this.setState({
                 user: {}
             });
+            this.props.history.push(`/`);
             console.log('Logged out!');
         } catch (error) {
-            // will add error handling soon
+            this.setState({
+                authMessage: error.message
+            })
         }
     }
 
@@ -65,7 +78,8 @@ class AuthProvider extends React.Component {
                     user: this.state.user,
                     signUp: this.signUp,
                     logIn: this.logIn,
-                    logOut: this.logOut
+                    logOut: this.logOut,
+                    authMessage: this.state.authMessage
                 }}>
                 {this.props.children}
             </AuthContext.Provider>
@@ -76,4 +90,5 @@ class AuthProvider extends React.Component {
 //ConsumerComponent will get data and be subscribed to any changes
 const AuthConsumer = AuthContext.Consumer;
 
-export { AuthProvider, AuthConsumer }
+export default withRouter(AuthProvider);
+export { AuthConsumer }

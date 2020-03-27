@@ -9,7 +9,7 @@ const Header = () => (
         <AuthConsumer>
             {({ user, logOut }) => (
                 <React.Fragment>
-                    <a href="/">
+                    <a href={user.id ? `/${user.id}/boards` : '/'}>
                         <span role="img" aria-label="house emoji">&#127968;</span>
                     </a>
                     <h1>React Trello Boards by Elzie</h1>

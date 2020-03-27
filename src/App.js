@@ -23,7 +23,9 @@ class App extends React.Component {
     try {
       this.setState({ boards: [] })
       // [] ensures that any previous boards in state will be removed before making calls to firebase.
-      const boards = await boardsRef.get();
+      const boards = await boardsRef //.get();
+        .where('board.user', '==', userId)
+        .orderBy('board.createdAt').get()
       //.get() gets data once, but doesnt listen for changes.
 
       boards.forEach(board => {

@@ -9,7 +9,8 @@ import List from './List';
 class Board extends React.Component {
     state = {
         currentBoard: {},
-        currentLists: []
+        currentLists: [],
+        message: ''
     }
 
     componentDidMount() {
@@ -73,6 +74,9 @@ class Board extends React.Component {
             this.setState({ currentBoard: board.data().board });
         } catch (error) {
             console.log('Error getting boards.', error)
+            this.setState({
+                message: 'Board not found...'
+            })
         }
     }
     addBoardInput = React.createRef();
@@ -99,6 +103,9 @@ class Board extends React.Component {
     deleteBoard = async () => {
         const boardId = this.props.match.params.boardId;
         this.props.deleteBoard(boardId);
+        this.setState({
+            message: 'Board not found...'
+        })
     }
 
     updateBoard = e => {
@@ -112,37 +119,48 @@ class Board extends React.Component {
         return (
             <AuthConsumer>
                 {({ user }) => (
-                    <div className="board-wrapper"
-                        style={{
-                            backgroundColor: this.state.currentBoard.background
-                        }}>
-                        <div className="board-header">
-                            {/* <h3>{this.state.currentBoard.title}</h3> */}
-                            <input
-                                type="text"
-                                name="boardTitle"
-                                onChange={this.updateBoard}
-                                defaultValue={this.state.currentBoard.title}
-                            />
-                            <button onClick={this.deleteBoard}>Delete Board</button>
-                        </div>
-                        {Object.keys(this.state.currentLists).map((key) => (
-                            <List
-                                key={this.state.currentLists[key].id}
-                                list={this.state.currentLists[key]}
-                                deleteList={this.props.deleteList}
-                            />
-                        ))}
-
-                        <form onSubmit={this.createNewList}
-                            className="new-list-wrapper">
-                            <input
-                                type="text"
-                                ref={this.addBoardInput}
-                                name="name"
-                                placeholder="+ New list" />
-                        </form>
-                    </div>
+                    <React.Fragment>
+                        {user.id === this.state.currentBoard.user ? (
+                            <div className="board-wrapper"
+                                style={{
+                                    backgroundColor: this.state.currentBoard.background
+                                }}>
+                                {this.state.message === '' ? (
+                                    <div className="board-header">
+                                        {/* <h3>{this.state.currentBoard.title}</h3> */}
+                                        <input
+                                            type="text"
+                                            name="boardTitle"
+                                            onChange={this.updateBoard}
+                                            defaultValue={this.state.currentBoard.title}
+                                        />
+                                        <button onClick={this.deleteBoard}>Delete Board</button>
+                                    </div>
+                                ) : (
+                                        <h2>{this.state.message}</h2>
+                                    )}
+                                <div className="lists-wrapper">
+                                    {Object.keys(this.state.currentLists).map((key) => (
+                                        <List
+                                            key={this.state.currentLists[key].id}
+                                            list={this.state.currentLists[key]}
+                                            deleteList={this.props.deleteList}
+                                        />
+                                    ))}
+                                </div>
+                                <form onSubmit={this.createNewList}
+                                    className="new-list-wrapper">
+                                    <input
+                                        type={this.state.message === '' ? 'text' : 'hidden'}
+                                        ref={this.addBoardInput}
+                                        name="name"
+                                        placeholder="+ New list" />
+                                </form>
+                            </div>
+                        ) : (
+                                <span></span>
+                            )}
+                    </React.Fragment>
                 )}
             </AuthConsumer>
         )

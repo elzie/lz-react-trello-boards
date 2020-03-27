@@ -14,9 +14,14 @@ const Header = () => (
                     </a>
                     <h1>React Trello Boards by Elzie</h1>
                     <div className="user-area">
-                        <small>user: {user.email}</small>
-                        <button onClick={(e) => logOut(e)}>Log out!</button>
-                        <small>Please sign in..</small>
+                        {user.id ? (
+                            <React.Fragment>
+                                <small>user: {user.email}</small>
+                                <button onClick={(e) => logOut(e)}>Log out!</button>
+                            </React.Fragment>
+                        ) : (
+                                <small>Please sign in..</small>
+                            )}
                     </div>
                 </React.Fragment>
             )}

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import data from '../sampleData';
 import { boardsRef, listsRef } from '../firebase';
+import { AuthConsumer } from './AuthContext';
 
 import List from './List';
 
@@ -108,40 +109,41 @@ class Board extends React.Component {
     }
     render() {
         return (
-            <div
-                className="board-wrapper"
-                style={{
-                    backgroundColor: this.state.currentBoard.background
-                }}
-            >
-                <div className="lists-wrapper">
-                    <div className="board-header">
-                        {/* <h3>{this.state.currentBoard.title}</h3> */}
-                        <input
-                            type="text"
-                            name="boardTitle"
-                            onChange={this.updateBoard}
-                            defaultValue={this.state.currentBoard.title}
-                        />
-                        <button onClick={this.deleteBoard}>Delete Board</button>
+            <AuthConsumer>
+                {({ user }) => (
+                    <div className="board-wrapper"
+                        style={{
+                            backgroundColor: this.state.currentBoard.background
+                        }}>
+                        <div className="board-header">
+                            {/* <h3>{this.state.currentBoard.title}</h3> */}
+                            <input
+                                type="text"
+                                name="boardTitle"
+                                onChange={this.updateBoard}
+                                defaultValue={this.state.currentBoard.title}
+                            />
+                            <button onClick={this.deleteBoard}>Delete Board</button>
+                        </div>
+                        {Object.keys(this.state.currentLists).map((key) => (
+                            <List
+                                key={this.state.currentLists[key].id}
+                                list={this.state.currentLists[key]}
+                                deleteList={this.props.deleteList}
+                            />
+                        ))}
+
+                        <form onSubmit={this.createNewList}
+                            className="new-list-wrapper">
+                            <input
+                                type="text"
+                                ref={this.addBoardInput}
+                                name="name"
+                                placeholder="+ New list" />
+                        </form>
                     </div>
-                    {Object.keys(this.state.currentLists).map((key) => (
-                        <List
-                            key={this.state.currentLists[key].id}
-                            list={this.state.currentLists[key]}
-                            deleteList={this.props.deleteList}
-                        />
-                    ))}
-                </div>
-                <form onSubmit={this.createNewList}
-                    className="new-list-wrapper">
-                    <input
-                        type="text"
-                        ref={this.addBoardInput}
-                        name="name"
-                        placeholder="+ New list" />
-                </form>
-            </div>
+                )}
+            </AuthConsumer>
         )
     }
 }
